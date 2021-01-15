@@ -6,6 +6,7 @@ import PyQt5
 from PyQt5.QtWidgets import *
 from PyQt5 import uic
 from PyQt5.QtGui import QColor
+from array import *
 
 import os
 
@@ -14,13 +15,16 @@ class App(QWidget):
         self.start()
         self.set()
         
+    
+
 
     def start(self):
         self.ui = uic.loadUi("Peg_Gui.ui")
         self.ui.show();
-
+        
 
     def set(self):
+        #buttons= [self.ui.btn_1, self.ui.btn_2]
         self.ui.btn_1.clicked.connect(lambda: self.click())
         self.ui.btn_2.clicked.connect(lambda: self.click())
         self.ui.btn_3.clicked.connect(lambda: self.click())
@@ -112,6 +116,7 @@ class App(QWidget):
         print(num)
         col = QColor(1, 80, 0)
         self.ui.btn_restart.setStyleSheet("QWidget { background-color: %s }" %col.name())
+        self.ui.buttons_grid[1,1].setStyleSheet("QWidget { background-color: %s }" %col.name())
 
 if __name__== '__main__':
     app = QApplication(sys.argv)
