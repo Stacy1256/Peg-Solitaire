@@ -176,7 +176,7 @@ class GameWindow(QWidget):
 
         self.loadGameGrid(self.gameGrid)
 
-    # Завнтажуємо поле
+    # Заватажуємо поле
     def loadGameGrid(self, grid):
         try:
             self.gridWidget.deleteLater()
@@ -254,16 +254,29 @@ class GameWindow(QWidget):
             self.gameGrid[locationSenderPeg[0]][locationSenderPeg[1]] = "a"
             self.selectedPegIndex = indexSenderPeg
         
+        
+
         if self.checkIfWon():
             self.showCongratulations()
+        else:
+            if not self.checkIfAnyMovesLeft():
+                self.showGameLose()
 
         self.loadGameGrid(self.gameGrid)
+        
     
-    # Спроба з'їсти фішку. Вдається - ок, невається, то нехай і невдається
+    def checkIfAnyMovesLeft(self) -> bool:
+
+        return True
+    
+    def showGameLose(self):
+        pass
+
+    # Спроба з'їсти фішку. Вдається - ок, невається, то нехай і не вдається
     def tryEatPeg(self, loc1, loc2):
-        # loc1 - selected peg location
-        # loc2 - pressed peg location
-        # loc3 - location pf peg between loc1 and loc2
+        # loc1 - вибране розташування фішки
+        # loc2 - місце пересування фішки
+        # loc3 - розташування фішки між loc1 та loc2 (яку намагаємося з'їсти)
         a = loc1[0] - loc2[0]
         b = loc1[1] - loc2[1]
         loc3 = (int((loc1[0] + loc2[0])/2), int((loc1[1] + loc2[1])/2))
@@ -297,21 +310,6 @@ class GameWindow(QWidget):
 
         return True     
 
-    # def undoMove(self):
-    #     if len(self.gameGridHistory) <= 1:
-    #         return
-    #     index = 0
-    #     for row in self.gameGridHistory[0]:
-    #         for row_element in row:
-    #             if row_element == "+" or row_element == "a":
-    #                 self.selectedPegIndex = index
-    #                 break
-    #             if row_element != "":
-    #                 index += 1
-    #     self.selectedPegIndex 
-    #     self.loadGameGrid(self.gameGridHistory[0])
-    #     self.gameGrid = deepcopy(self.gameGridHistory[0])
-    #     self.gameGridHistory.pop()
     def undoMove(self):
         if len(self.gameGridHistory) <= 1:
             return
@@ -331,7 +329,7 @@ class GameWindow(QWidget):
     def checkIfWon(self):
         for row in self.gameGrid:
             for row_element in row:
-                if row_element == "a" or row_element == "i":
+                if row_element not in [".", "+"]:
                     pass
                 else:
                     return False
@@ -340,8 +338,15 @@ class GameWindow(QWidget):
 
     def showCongratulations(self):
         textCongratulations = "You have completed this game!\nHurray!"
-        self.widgetCongrats = ClickableLabelWidget2(self, self.closeCongratulations, self.windowSizeDefault[0], self.windowSizeDefault[1], textCongratulations)
-        self.layoutMain.addWidget(self.widgetCongrats)
+        messageBox = QMessageBox()
+        messageBox.setWindowTitle("Congratulations")
+        messageBox.setText(textCongratulations)
+        messageBox.setIcon(QMessageBox.Information)
+        messageBox.setStandardButtons(QMessageBox.Ok)
+
+        x = messageBox.exec()
+        # self.widgetCongrats = ClickableLabelWidget2(self, self.closeCongratulations, self.windowSizeDefault[0], self.windowSizeDefault[1], textCongratulations)
+        # self.layoutMain.addWidget(self.widgetCongrats)
 
     def closeCongratulations(self):
         self.widgetCongrats.deleteLater()

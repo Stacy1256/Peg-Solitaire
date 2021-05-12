@@ -1,30 +1,50 @@
-import sys
-from PyQt5 import QtWidgets
+from OpenGL.GL import *
+from OpenGL.GLU import *
+from PyQt5 import QtGui
+from PyQt5.QtWidgets import *
+from PyQt5.QtOpenGL import *
 
-
-class Menu(QtWidgets.QMainWindow):
+class MainWindow(QWidget):
     def __init__(self):
-        super().__init__()
+        super(MainWindow, self).__init__()
+        self.widget = glWidget(self)
+        self.button = QPushButton('Test', self)
+        mainLayout = QHBoxLayout()
+        mainLayout.addWidget(self.widget)
+        mainLayout.addWidget(self.button)
+        self.setLayout(mainLayout)
 
-        colorButton = QtWidgets.QPushButton("Colors")
-        exitAct = QtWidgets.QAction('Exit', self)
+class glWidget(QGLWidget):
 
-        toolbar = self.addToolBar("Exit")
+    def __init__(self, parent):
+        QGLWidget.__init__(self, parent)
+        self.setMinimumSize(640, 480)
 
-        toolbar.addWidget(colorButton)
-        toolbar.addAction(exitAct)
+    def paintGL(self):
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
+        glLoadIdentity()
+        glTranslatef(-2.5, 0.5, -6.0)
+        glColor3f( 1.0, 1.5, 0.0 )
+        glPolygonMode(GL_FRONT, GL_FILL)
+        glBegin(GL_TRIANGLES)
+        glVertex3f(0,-1.2,0.0)
+        glVertex3f(2.6,0.0,0.0)
+        glVertex3f(2.9,-1.2,0.0)
+        glEnd()
+        glFlush()
 
-        menu = QtWidgets.QMenu()
-        menu.addAction("red")
-        menu.addAction("green")
-        menu.addAction("blue")
-        colorButton.setMenu(menu)
-
-        menu.triggered.connect(lambda action: print(action.text()))
-
+    def initializeGL(self):
+        glClearDepth(1.0)              
+        glDepthFunc(GL_LESS)
+        glEnable(GL_DEPTH_TEST)
+        glShadeModel(GL_SMOOTH)
+        glMatrixMode(GL_PROJECTION)
+        glLoadIdentity()                    
+        gluPerspective(45.0,1.33,0.1, 100.0) 
+        glMatrixMode(GL_MODELVIEW)
 
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
-    menu = Menu()
-    menu.show()
-    sys.exit(app.exec_())
+    app = QApplication(['Yo'])
+    window = MainWindow()
+    window.show()
+    app.exec_()

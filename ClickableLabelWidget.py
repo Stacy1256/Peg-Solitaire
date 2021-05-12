@@ -32,12 +32,13 @@ class ClickableLabelWidget(QLabel):
 class ClickableLabelWidget2(QLabel):
     clicked = pyqtSignal()
 
-    def __init__(self, clickAction, width, height, text):
-        super().__init__()
+    def __init__(self, parent, clickAction, width, height, text):
+        super().__init__(parent)
         self.clickAction = clickAction
         self.setFixedWidth(width)
         self.setFixedHeight(height)
         self.setText(text)
+        self.setParent(parent)
 
     def mouseReleaseEvent(self, QMouseEvent):
         self.clickAction()
