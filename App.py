@@ -15,7 +15,7 @@ from threading import Timer
 
 from PyQt5.QtWidgets import *
 from PyQt5 import uic, QtOpenGL
-from PyQt5.QtGui import QColor
+from PyQt5.QtGui import QColor, QPalette
 from PyQt5.QtCore import Qt, QSize, QTimer
 from PyQt5.QtOpenGL import *
 from LevelsWindow import LevelsWindow
@@ -35,6 +35,9 @@ class MainWindow(QStackedWidget):
 
     def initUI(self):
         self.initWindow()
+        p = self.palette()
+        p.setColor(QPalette.Window, QColor(228, 228, 228))
+        self.setPalette(p)
 
     def initVariables(self):
         self.desktopWindowSize = (
