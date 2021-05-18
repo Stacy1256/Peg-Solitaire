@@ -1,6 +1,7 @@
 #!/usr/bin/python3
 # -*- coding: utf-8 -*-
 
+from PyQt5 import QtCore
 from RenderCube import cubeMesh
 from constants import (
     ANGLE_INCREMENTOR,
@@ -36,7 +37,7 @@ class MainWindow(QStackedWidget):
     def initUI(self):
         self.initWindow()
         p = self.palette()
-        p.setColor(QPalette.Window, QColor(228, 228, 228))
+        p.setColor(QPalette.Window, QColor(240, 216, 240))
         self.setPalette(p)
 
     def initVariables(self):
@@ -115,7 +116,7 @@ class MenuWindow(QWidget):
         self.createLayout()
         self.addLevelsButton()
         self.layoutV.addStretch(1)
-
+      
         self.layoutV.addLayout(self.layoutH, 3)
 
         self.layoutV.addWidget(glWidget(self), 5)
@@ -136,11 +137,24 @@ class MenuWindow(QWidget):
         self.layoutH.addStretch(1)
         self.layoutH.addWidget(buttonLevels, 2)
         self.layoutH.addStretch(1)
+    
+    #timer
+    def timer(self):
+        self.curr_time = QtCore.QTime(00,00,00)
+        self.timer = QtCore.QTimer()
+        self.timer.timeout.connect(self.time)
+        self.timer.start(1000)
+
+    def time(self):
+        self.curr_time = self.curr_time.addSecs(self, 1)
+        self.upTime.setTime(self.curr_time)
+
 
     # Робимо вікно посередині екрану
     def center(self):
         qr = self.frameGeometry()
         cp = QDesktopWidget().availableGeometry().center()
+        
         # qr.moveCenter(cp)
         self.move(qr.topLeft())
 
@@ -157,6 +171,9 @@ class glWidget(QGLWidget):
         QGLWidget.__init__(self, parent)
         # self.setMinimumSize(640, 480)
         self.startTimer(1000/FRAMES_PER_SECOND)
+        p = self.palette()
+        p.setColor(QPalette.Window, QColor(240, 216, 240))
+        self.setPalette(p)
 
     def renderFigure(self):
         print(self.angle)
@@ -181,6 +198,8 @@ class glWidget(QGLWidget):
         glRotatef(ANGLE_INCREMENTOR, 200.0, 21.0, 1.0)
         # glRotatef(self.angle, 0.0, 0.0, 0.0)
         cubeMesh()
+
+
         
 
         

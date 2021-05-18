@@ -1,8 +1,8 @@
 from LevelButtonWidget import LevelMenuButton
 import PyQt5
 from PyQt5.QtWidgets import *
-from PyQt5.QtCore import QSize
-from PyQt5.QtGui import QColor, QIcon, QPixmap, QColorConstants
+from PyQt5.QtCore import QSize, QTime, QTimer, Qt
+from PyQt5.QtGui import QColor, QFont, QIcon, QPalette, QPixmap, QColorConstants
 import os
 import Levels
 import sys
@@ -11,6 +11,7 @@ from copy import deepcopy
 
 LevelMenuStyle = """
 QMenu {{
+    margin-right: 70px;
     font-size: 18px;
     left: 20px;
     color: black;
@@ -43,6 +44,8 @@ class GameWindow(QWidget):
     # Min width, height of button on ToolBar
     minWHBackBtn = 50 
     selectedPegIndex = -1
+
+    curr_time: QTime = QTime(00,00,00)
 
     def __init__(self, gameNumber, showLevelWindow):
         # self.start()
@@ -83,10 +86,33 @@ class GameWindow(QWidget):
 
         self.addBackButtonToToolBar()
         self.addMenuToToolBar()
+        # self.toolBar.add
+        self.addTimerToToolBar()
         self.addSpacerWidgetToToolBar()
         self.addRestartButtonToToolBar()
         self.addUndoButtonToToolBar()
     
+    def addTimerToToolBar(self):
+        self.timerLabel = QLabel()
+        self.toolBar.addWidget(self.timerLabel)
+        self.timerLabel.setText("00:00")
+        self.timerLabel.setAlignment(Qt.AlignCenter)
+        p= QPalette()
+        p.setColor(self.timerLabel.foregroundRole(), QColor(222,0,22))
+        self.timerLabel.setPalette(p)
+        self.timerLabel.setFont(QFont("Arial", 20))
+        # self.timerLabel.setStyleSheet("border :3px solid blue;padding :15px; margin-left: 70px")
+        # 
+        self.timer = QTimer()
+        self.timer.timeout.connect(self.updateTime)
+        self.timer.start(1000)
+
+    def updateTime(self):
+        self.curr_time = self.curr_time.addSecs(1)
+        self.timerLabel.setText(self.curr_time.toString("mm:ss"))
+
+    # self.upTime.setTime(self.curr_time))
+
     # Додали меню до тулбару
     def addMenuToToolBar(self):
         self.menuGameLevelsButton = QPushButton("Levels")
@@ -115,9 +141,12 @@ class GameWindow(QWidget):
         self.menuGameLevels.setStyle(MyProxyStyle("Windows"))
 
         self.menuGameLevels.setStyleSheet(style)
+        self.menuGameLevelsButton.setStyleSheet("margin-right: 70px;")
 
     # Обрали інший рівень з меню (випадаючий список)
     def gameLevelChanged(self, levelName):
+        self.curr_time= QTime (0,0)
+        self.timer.start()
 
         for levelID in range(len(Levels.levels)):
             if Levels.levels[levelID]["name"] == levelName:
@@ -224,12 +253,18 @@ class GameWindow(QWidget):
     def setGridWidget(self):
         self.gridWidget = QWidget()
         self.gridWidget.setMaximumSize(QSize(*self.gridWidgetSize))
+        self.gridWidget.setAutoFillBackground(True)
+        p = QPalette()
+        p.setColor(self.gridWidget.backgroundRole(), QColor(0, 255, 0))
+        self.gridWidget.setPalette(p)
 
     def restartGame(self):
-        # self.deleteLater()
-        # self.__init__(self.gameNumber, self.showLevelWindow)
+        self.curr_time= QTime (0,0)
+        self.timer.start()
+        self.timerLabel.setText(self.curr_time.toString("mm:ss"))
         self.loadGame()
         self.update()
+
     
     def btnClicked(self, indexSenderPeg):
         locationSenderPeg = self.gameGridLayout.getItemPosition(indexSenderPeg)
@@ -337,7 +372,8 @@ class GameWindow(QWidget):
         return True
 
     def showCongratulations(self):
-        textCongratulations = "You have completed this game!\nHurray!"
+        self.timer.stop()
+        textCongratulations = "You have completed this game in {} minutes {} seconds !\nHurray!".format(self.curr_time.toString("mm"),self.curr_time.toString("ss"))
         messageBox = QMessageBox()
         messageBox.setWindowTitle("Congratulations")
         messageBox.setText(textCongratulations)
