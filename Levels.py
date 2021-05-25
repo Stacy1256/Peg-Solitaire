@@ -87,9 +87,23 @@ levels = [
         ],
         "size": (6, 6)
     },
+     {
+         "imageName": "Game-Test1.jpg",
+        "name": "Test1",
+        "map": [
+            ["", "", "O", "O", "O", "", ""],
+            ["", "", "O", ".", "O", "", ""],
+            ["O", "O", ".", "O", ".", "O", "O"],
+            ["O", ".", "O", "o", ".", "O", "O"],
+            ["O", "O", "O", "O", "O", "O", "O"],
+            ["", "", "O", "O", "O", "", ""],
+            ["", "", "O", "O", "O", "", ""]
+        ],
+        "size": (7, 7)
+    },
     {
-        "imageName" : "Game-French.jpg",
-        "name" : "test",
+        "imageName" : "Game-Test2.jpg",
+        "name" : "Test2",
         "map" :[
             ["", "", ""],
             [".", ".", "o"],

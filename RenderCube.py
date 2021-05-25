@@ -3,6 +3,7 @@ from OpenGL.GL import *
 from OpenGL.GLU import *
 
 def cubeMesh():
+    glClearColor (225/255, 207/255, 57/255, 1)
 
     glBegin(GL_QUADS)
     for face in cube_faces_vector4:

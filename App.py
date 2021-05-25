@@ -37,7 +37,7 @@ class MainWindow(QStackedWidget):
     def initUI(self):
         self.initWindow()
         p = self.palette()
-        p.setColor(QPalette.Window, QColor(240, 216, 240))
+        p.setColor(QPalette.Window, QColor(245, 227, 77))
         self.setPalette(p)
 
     def initVariables(self):
@@ -131,23 +131,23 @@ class MenuWindow(QWidget):
 
     # Додаємо кнопку "рівні"
     def addLevelsButton(self):
-        buttonLevels = QPushButton("Levels", self)
-        buttonLevels.setMinimumHeight(60)
+        buttonLevels = QPushButton("PLAY", self)
+        buttonLevels.setMinimumHeight(80)
         buttonLevels.clicked.connect(self.showLevelsWindow)
         self.layoutH.addStretch(1)
         self.layoutH.addWidget(buttonLevels, 2)
         self.layoutH.addStretch(1)
     
-    #timer
-    def timer(self):
-        self.curr_time = QtCore.QTime(00,00,00)
-        self.timer = QtCore.QTimer()
-        self.timer.timeout.connect(self.time)
-        self.timer.start(1000)
+    # #timer
+    # def timer(self):
+    #     self.curr_time = QtCore.QTime(00,00,00)
+    #     self.timer = QtCore.QTimer()
+    #     self.timer.timeout.connect(self.time)
+    #     self.timer.start(1000)
 
-    def time(self):
-        self.curr_time = self.curr_time.addSecs(self, 1)
-        self.upTime.setTime(self.curr_time)
+    # def time(self):
+    #     self.curr_time = self.curr_time.addSecs(self, 1)
+    #     self.upTime.setTime(self.curr_time)
 
 
     # Робимо вікно посередині екрану
@@ -169,13 +169,20 @@ class glWidget(QGLWidget):
 
     def __init__(self, parent):
         QGLWidget.__init__(self, parent)
-        # self.setMinimumSize(640, 480)
-        self.startTimer(1000/FRAMES_PER_SECOND)
+        self.setMinimumSize(400, 480)
+        self.setMaximumSize(550, 550)
         p = self.palette()
-        p.setColor(QPalette.Window, QColor(240, 216, 240))
+        p.setColor(QPalette.Window, QColor(245, 227, 77))
         self.setPalette(p)
+        self.startTimer(1000/FRAMES_PER_SECOND)
+
+        #color
+        # p = self.palette()
+        # p.setColor(QPalette.Window, QColor(240, 216, 240))
+        # self.setPalette(p)
 
     def renderFigure(self):
+        
         print(self.angle)
         self.angle = (self.angle + ANGLE_INCREMENTOR) % 360
         self.updateGL()
@@ -208,6 +215,7 @@ class glWidget(QGLWidget):
 
     def initializeGL(self):
         # glClearDepth(1.0)
+        
         glDepthFunc(GL_LESS)
         # print (float(self.width()), float(self.height()), (float(self.width()) / float(self.height())))
         gluPerspective(45.0, (float(self.width()) / float(self.height())), 0.1, 50.0)
@@ -227,6 +235,7 @@ class glWidget(QGLWidget):
         glMatrixMode(GL_MODELVIEW)
 
     def randomColorGenerator():
+        
         r = randint(MIN_COLOR_VALUE, MAX_COLOR_VALUE) / 255
         g = randint(MIN_COLOR_VALUE, MAX_COLOR_VALUE) / 255
         b = randint(MIN_COLOR_VALUE, MAX_COLOR_VALUE) / 255

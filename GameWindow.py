@@ -12,7 +12,7 @@ from copy import deepcopy
 LevelMenuStyle = """
 QMenu {{
     margin-right: 70px;
-    font-size: 18px;
+    font-size: 20px;
     left: 20px;
     color: black;
     width: {}px;
@@ -98,7 +98,7 @@ class GameWindow(QWidget):
         self.timerLabel.setText("00:00")
         self.timerLabel.setAlignment(Qt.AlignCenter)
         p= QPalette()
-        p.setColor(self.timerLabel.foregroundRole(), QColor(222,0,22))
+        p.setColor(self.timerLabel.foregroundRole(), QColor(56,145,0))
         self.timerLabel.setPalette(p)
         self.timerLabel.setFont(QFont("Arial", 20))
         # self.timerLabel.setStyleSheet("border :3px solid blue;padding :15px; margin-left: 70px")
